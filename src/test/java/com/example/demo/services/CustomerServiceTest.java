@@ -8,10 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-
-import static org.junit.jupiter.api.Assumptions.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 import com.example.demo.DTO.Response.CustomerResponse;

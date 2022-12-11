@@ -4,7 +4,11 @@ import com.example.demo.DTO.Response.CustomerResponse;
 import com.example.demo.Repository.CustomerRepository;
 import com.example.demo.Tables.Customer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -28,7 +32,7 @@ public class CustomerService {
         response.setEmail(customer.getEmail());
         return response;
     }
-    public void postCustomer(CustomerRequest request){
+    public URI postCustomer(CustomerRequest request){
         Optional<Customer> customerOptional=customerRepository
                 .findCustomerByEmail(request.getEmail());
         if(customerOptional.isPresent())
@@ -40,6 +44,9 @@ public class CustomerService {
         customer.setEmail(request.getEmail());
         customer.setPassword(request.getPassword());
         customerRepository.save(customer);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}").buildAndExpand(customer.getId()).toUri();
+        return location;
     }
     public void deleteCustomer(Long customerId) {
         boolean exist=customerRepository.existsById(customerId);
@@ -47,7 +54,6 @@ public class CustomerService {
             throw new IllegalStateException("Customer with id "+customerId+" doesn't exist");
         customerRepository.deleteById(customerId);
     }
-
     public void updateCustomer(Long customerId, CustomerRequest request) {
         Customer customer=customerRepository.findById(customerId)
                 .orElseThrow(()-> new IllegalStateException(
