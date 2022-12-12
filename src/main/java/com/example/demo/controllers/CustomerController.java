@@ -1,33 +1,35 @@
 package com.example.demo.controllers;
-import com.example.demo.DTO.Request.CustomerRequest;
-import com.example.demo.DTO.Response.CustomerResponse;
-import com.example.demo.services.CustomerService;
+import com.example.demo.DTO.request.CustomerRequest;
+import com.example.demo.DTO.response.CustomerResponse;
+import com.example.demo.repository.CustomerRepository;
+import com.example.demo.services.serviceImpl.CustomerServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
+
 @RestController
 @RequestMapping(path = "api/v1/customer")
 public class CustomerController {
-    private final CustomerService customerService;
-    @Autowired
-    public CustomerController(CustomerService customerService) {
-        this.customerService = customerService;
-    }
-    @GetMapping("/{customerId}")
+    @Autowired private CustomerServiceImpl customerServiceImpl;
+    @Autowired private CustomerRepository customerRepository;
+    @GetMapping(path = "/{customerId}",consumes = "application/json", produces = "application/json")
     public ResponseEntity<CustomerResponse> getCustomer(@PathVariable Long customerId){
-        return new ResponseEntity<> (customerService.getCustomer(customerId), HttpStatus.OK);
+        return new ResponseEntity<> (customerServiceImpl.getCustomer(customerId), HttpStatus.OK);
     }
     @PostMapping
-    public void postCustomer(@RequestBody CustomerRequest request){customerService.postCustomer(request);}
-
+    public ResponseEntity<Object> postCustomer(@RequestBody CustomerRequest request){
+        URI location= customerServiceImpl.postCustomer(request);
+        return ResponseEntity.created(location).build();
+    }
     @DeleteMapping(path = "{customerId}")
     public void deleteCustomer(@PathVariable("customerId") Long customerId){
-        customerService.deleteCustomer(customerId);
+        customerServiceImpl.deleteCustomer(customerId);
     }
     @PutMapping(path = "{customerId}")
     public void updateCustomer(@PathVariable Long customerId,@RequestBody CustomerRequest request){
-        customerService.updateCustomer(customerId,request);
+        customerServiceImpl.updateCustomer(customerId,request);
     }
 }

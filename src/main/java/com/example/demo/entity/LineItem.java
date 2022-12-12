@@ -1,7 +1,6 @@
-package com.example.demo.Tables;
+package com.example.demo.entity;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @Table
@@ -10,18 +9,15 @@ public class LineItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private int quantity;
-
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "cartId")
     private Cart cart;
-
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "productId")
     private Product product;
 
     public LineItem() {
     }
-
     public LineItem(int quantity) {
         this.quantity = quantity;
     }

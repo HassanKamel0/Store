@@ -1,17 +1,15 @@
-package com.example.demo.Tables;
+package com.example.demo.entity;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
 @Entity
 @Table
 public class Cart {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private LocalDate createdDate;
     private int totalPrice;
-
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "customerId")
     private Customer customer;

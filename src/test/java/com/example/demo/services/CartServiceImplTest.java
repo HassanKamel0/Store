@@ -1,11 +1,10 @@
 package com.example.demo.services;
-import com.example.demo.DTO.Request.CartRequest;
-import com.example.demo.DTO.Response.CartResponse;
-import com.example.demo.Repository.CartRepository;
-import com.example.demo.Tables.Cart;
-import com.example.demo.Tables.Customer;
-import lombok.extern.java.Log;
-import org.junit.jupiter.api.BeforeEach;
+import com.example.demo.DTO.request.CartRequest;
+import com.example.demo.DTO.response.CartResponse;
+import com.example.demo.repository.CartRepository;
+import com.example.demo.entity.Cart;
+import com.example.demo.entity.Customer;
+import com.example.demo.services.serviceImpl.CartServiceImpl;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -25,15 +24,10 @@ import static org.mockito.Mockito.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(MockitoExtension.class)
-class CartServiceTest {
+class CartServiceImplTest {
     @Mock private CartRepository cartRepository;
     @Mock private CartResponse cartResponse;
-    @InjectMocks private CartService underTest;
-
-    @BeforeEach
-    void setUp() {
-        underTest = new CartService(cartRepository);
-    }
+    @InjectMocks private CartServiceImpl underTest;
     @Nested
     class whenGetCart {
         @Test

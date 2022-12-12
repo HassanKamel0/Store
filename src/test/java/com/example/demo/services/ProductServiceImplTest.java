@@ -1,10 +1,11 @@
 package com.example.demo.services;
-import com.example.demo.DTO.Request.ProductLineItemRequest;
-import com.example.demo.DTO.Request.ProductRequest;
-import com.example.demo.DTO.Response.ProductResponse;
-import com.example.demo.Repository.ProductRepository;
-import com.example.demo.Tables.Product;
-import org.junit.jupiter.api.BeforeEach;
+import com.example.demo.DTO.request.ProductLineItemRequest;
+import com.example.demo.DTO.request.ProductRequest;
+import com.example.demo.DTO.response.ProductResponse;
+import com.example.demo.repository.ProductRepository;
+import com.example.demo.entity.Product;
+import com.example.demo.services.serviceImpl.LineItemServiceImpl;
+import com.example.demo.services.serviceImpl.ProductServiceImpl;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -20,17 +21,13 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(MockitoExtension.class)
-class ProductServiceTest {
+class ProductServiceImplTest {
     @InjectMocks
-    private ProductService underTest;
+    private ProductServiceImpl underTest;
     @Mock private ProductRepository productRepository;
-    @Mock private LineItemService lineItemService;
+    @Mock private LineItemServiceImpl lineItemServiceImpl;
     @Mock private ProductResponse productResponse;
     @Mock private ProductLineItemRequest productLineItemRequest;
-    @BeforeEach
-    void setUp() {
-        underTest=new ProductService(productRepository,lineItemService);
-    }
     @Nested
     class whenGetProduct {
         @Test
@@ -141,7 +138,7 @@ class ProductServiceTest {
         underTest.postProductInLineItem(productLineItemRequest);
         //then
         ArgumentCaptor<ProductLineItemRequest> requestArgumentCaptor=ArgumentCaptor.forClass(ProductLineItemRequest.class);
-        verify(lineItemService).putProductInLineItem(requestArgumentCaptor.capture());
+        verify(lineItemServiceImpl).putProductInLineItem(requestArgumentCaptor.capture());
         ProductLineItemRequest capturedRequest=requestArgumentCaptor.getValue();
         assertEquals(capturedRequest.getProductId(),productLineItemRequest.getProductId());
         assertEquals(capturedRequest.getCartId(),productLineItemRequest.getCartId());

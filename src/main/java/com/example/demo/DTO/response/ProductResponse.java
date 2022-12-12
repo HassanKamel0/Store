@@ -1,4 +1,4 @@
-package com.example.demo.DTO.Response;
+package com.example.demo.DTO.response;
 
 public class ProductResponse {
     private String name;

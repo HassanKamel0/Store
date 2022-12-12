@@ -1,12 +1,10 @@
-package com.example.demo.DTO.Response;
+package com.example.demo.DTO.response;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 public class CartResponse {
     private LocalDate createdDate;
     private int totalPrice;
-
     public int getTotalPrice() {
         return totalPrice;
     }
