@@ -1,4 +1,4 @@
-package com.example.demo.Tables;
+package com.example.demo.entity;
 import javax.persistence.*;
 import java.util.Set;
 
@@ -11,7 +11,6 @@ public class Product {
     private String name;
     private int price;
     private String description;
-
     @OneToMany(mappedBy = "product")
     private Set<LineItem> lineItem;
 

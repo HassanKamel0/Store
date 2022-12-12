@@ -1,15 +1,15 @@
 package com.example.demo.services;
 
-import com.example.demo.DTO.Request.LineItemRequest;
-import com.example.demo.DTO.Request.ProductLineItemRequest;
-import com.example.demo.DTO.Response.LineItemResponse;
-import com.example.demo.Repository.CartRepository;
-import com.example.demo.Repository.LineItemRepository;
-import com.example.demo.Repository.ProductRepository;
-import com.example.demo.Tables.Cart;
-import com.example.demo.Tables.LineItem;
-import com.example.demo.Tables.Product;
-import org.junit.jupiter.api.BeforeEach;
+import com.example.demo.DTO.request.LineItemRequest;
+import com.example.demo.DTO.request.ProductLineItemRequest;
+import com.example.demo.DTO.response.LineItemResponse;
+import com.example.demo.repository.CartRepository;
+import com.example.demo.repository.LineItemRepository;
+import com.example.demo.repository.ProductRepository;
+import com.example.demo.entity.Cart;
+import com.example.demo.entity.LineItem;
+import com.example.demo.entity.Product;
+import com.example.demo.services.serviceImpl.LineItemServiceImpl;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -29,7 +29,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(MockitoExtension.class)
-class LineItemServiceTest {
+class LineItemServiceImplTest {
     @Mock LineItemRepository lineItemRepository;
     @Mock ProductRepository productRepository;
     @Mock CartRepository cartRepository;
@@ -37,9 +37,8 @@ class LineItemServiceTest {
     @Mock LineItemRequest lineItemRequest;
     @Mock ProductLineItemRequest productLineItemRequest;
     @Mock LineItem lineItem;
-    @InjectMocks LineItemService underTest;
-    @BeforeEach
-    void setUp() {underTest = new LineItemService(lineItemRepository, productRepository, cartRepository);}
+    @InjectMocks
+    LineItemServiceImpl underTest;
     @Nested
     class whenGetLineItem {
         @Test

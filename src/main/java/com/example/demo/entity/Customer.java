@@ -1,4 +1,4 @@
-package com.example.demo.Tables;
+package com.example.demo.entity;
 import javax.persistence.*;
 @Entity
 @Table
@@ -11,7 +11,6 @@ public class Customer {
     private String password;
     public Customer() {
     }
-
     public Customer(Long id, String name, String email, String password) {
         this.id = id;
         this.name = name;

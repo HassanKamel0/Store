@@ -1,6 +1,8 @@
 package com.example.demo.services;
-import com.example.demo.DTO.Request.CustomerRequest;
-import org.junit.jupiter.api.BeforeEach;
+import com.example.demo.DTO.request.CustomerRequest;
+import com.example.demo.services.serviceImpl.CartServiceImpl;
+import com.example.demo.services.serviceImpl.CustomerServiceImpl;
+import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -11,28 +13,27 @@ import org.mockito.Mock;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
-import com.example.demo.DTO.Response.CustomerResponse;
-import com.example.demo.Repository.CustomerRepository;
-import com.example.demo.Tables.Customer;
+import com.example.demo.DTO.response.CustomerResponse;
+import com.example.demo.repository.CustomerRepository;
+import com.example.demo.entity.Customer;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
 import java.util.Objects;
 import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(MockitoExtension.class)
-class CustomerServiceTest {
-    @InjectMocks
-    private CustomerService underTest;
-    @Mock
-    private CustomerRepository customerRepository;
-    @Mock private CartService cartService;
+class CustomerServiceImplTest {
+    @InjectMocks private CustomerServiceImpl underTest;
+    @Mock private CustomerRepository customerRepository;
+    @Mock private CartServiceImpl cartServiceImpl;
     @Mock private CustomerResponse customerResponse;
     @Mock private CustomerRequest customerRequest;
-
-    @BeforeEach
-    void setUp() {
-        underTest = new CustomerService(customerRepository, cartService);
-    }
     @Nested
     class whenGet {
         @Test
@@ -68,15 +69,20 @@ class CustomerServiceTest {
         void postCustomer() {
             //given
             Customer customer = new Customer();
-            CustomerRequest request = new CustomerRequest();
-            request.setName("Hassan");
-            request.setEmail("hassan@gmail.com");
-            request.setPassword("password");
-            customer.setName(request.getName());
-            customer.setEmail(request.getEmail());
-            customer.setPassword(request.getPassword());
+            CustomerRequest customerRequest = new CustomerRequest();
+            customerRequest.setName("Hassan");
+            customerRequest.setEmail("hassan@gmail.com");
+            customerRequest.setPassword("password");
+            customer.setName(customerRequest.getName());
+            customer.setEmail(customerRequest.getEmail());
+            customer.setPassword(customerRequest.getPassword());
+            MockHttpServletRequest request = new MockHttpServletRequest();
+            RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
+            URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                    .path("/{id}").buildAndExpand(customer.getId()).toUri();
             //when
-            underTest.postCustomer(request);
+            when(customerRepository.findCustomerByEmail(any())).thenReturn(Optional.empty());
+            when(underTest.postCustomer(customerRequest)).thenReturn(location);
             //then
             ArgumentCaptor<Customer> customerArgumentCaptor = ArgumentCaptor.forClass(Customer.class);
             verify(customerRepository).save(customerArgumentCaptor.capture());
@@ -85,7 +91,6 @@ class CustomerServiceTest {
             assertEquals(capturedCustomer.getEmail(), customer.getEmail());
             assertEquals(capturedCustomer.getPassword(), customer.getPassword());
         }
-
         @Test
         void willThrowWhenCustomerFoundWhenPost() {
            when(customerRepository.findCustomerByEmail(any())).thenReturn(Optional.of(new Customer()));

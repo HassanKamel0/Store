@@ -1,10 +1,9 @@
 package com.example.demo.controllers;
 import java.net.URI;
-import java.util.Optional;
 
-import com.example.demo.DTO.Request.CustomerRequest;
-import com.example.demo.DTO.Response.CustomerResponse;
-import com.example.demo.services.CustomerService;
+import com.example.demo.DTO.request.CustomerRequest;
+import com.example.demo.DTO.response.CustomerResponse;
+import com.example.demo.services.serviceImpl.CustomerServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,7 +12,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import com.example.demo.DemoApplication;
-import com.example.demo.Tables.Customer;
+import com.example.demo.entity.Customer;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -23,14 +22,15 @@ import static org.mockito.Mockito.when;
 class CustomerControllerTest {
     @LocalServerPort
     int randomServerPort;
-    @Mock CustomerService customerService;
+    @Mock
+    CustomerServiceImpl customerServiceImpl;
     @Test
     void shouldGetCustomer() throws Exception {
         Customer customer=new Customer(100L,"Hassan","hassan@gmail.com","password");
         CustomerResponse response=new CustomerResponse();
         response.setName(customer.getName());
         response.setEmail(customer.getEmail());
-        when(customerService.getCustomer(any())).thenReturn(response);
+        when(customerServiceImpl.getCustomer(any())).thenReturn(response);
         RestTemplate restTemplate = new RestTemplate();
         URI uri = new URI("http://localhost:" + randomServerPort + "/api/v1/customer/customerId");
         ResponseEntity<CustomerResponse> responseCustomer = restTemplate.getForEntity(uri,CustomerResponse.class);

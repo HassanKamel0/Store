@@ -1,8 +1,8 @@
 package com.example.demo.controllers;
-import com.example.demo.DTO.Request.ProductLineItemRequest;
-import com.example.demo.DTO.Request.ProductRequest;
-import com.example.demo.DTO.Response.ProductResponse;
-import com.example.demo.services.ProductService;
+import com.example.demo.DTO.request.ProductLineItemRequest;
+import com.example.demo.DTO.request.ProductRequest;
+import com.example.demo.DTO.response.ProductResponse;
+import com.example.demo.services.serviceImpl.ProductServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,30 +10,28 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping(path = "api/v1/product")
 public class ProductController {
-   private final ProductService productService;
     @Autowired
-    public ProductController(ProductService productService) {this.productService = productService;}
-
+    private ProductServiceImpl productServiceImpl;
     @GetMapping("/{productId}")
     public ResponseEntity<ProductResponse> getProduct(@PathVariable Long productId){
-     return new ResponseEntity<>(productService.getProduct(productId), HttpStatus.OK);
+     return new ResponseEntity<>(productServiceImpl.getProduct(productId), HttpStatus.OK);
     }
     @PostMapping
     public void postProduct(@RequestBody ProductRequest productRequest){
-     productService.postProduct(productRequest);}
+     productServiceImpl.postProduct(productRequest);}
 
     @PostMapping("/{lineItemId}")
     public void postProductInLineItem(@RequestBody ProductLineItemRequest LineItemRequest){
-     productService.postProductInLineItem(LineItemRequest);
+     productServiceImpl.postProductInLineItem(LineItemRequest);
     }
 
     @DeleteMapping("/{productId}")
     public void deleteProduct(@PathVariable Long productId){
-      productService.deleteProduct(productId);
+      productServiceImpl.deleteProduct(productId);
     }
 
     @PutMapping("/{productId}")
     public void updateProduct(@PathVariable Long productId,@RequestBody ProductRequest request){
-        productService.updateProduct(productId,request);
+        productServiceImpl.updateProduct(productId,request);
     }
 }

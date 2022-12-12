@@ -1,8 +1,7 @@
-package com.example.demo.DTO.Response;
+package com.example.demo.DTO.response;
 
 public class LineItemResponse {
     private int quantity;
-
     public int getQuantity() {
         return quantity;
     }

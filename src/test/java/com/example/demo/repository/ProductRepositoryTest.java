@@ -1,6 +1,6 @@
-package com.example.demo.Repository;
+package com.example.demo.repository;
 
-import com.example.demo.Tables.Product;
+import com.example.demo.entity.Product;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
