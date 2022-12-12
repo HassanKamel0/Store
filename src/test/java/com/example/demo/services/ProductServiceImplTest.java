@@ -26,8 +26,6 @@ class ProductServiceImplTest {
     private ProductServiceImpl underTest;
     @Mock private ProductRepository productRepository;
     @Mock private LineItemServiceImpl lineItemServiceImpl;
-    @Mock private ProductResponse productResponse;
-    @Mock private ProductLineItemRequest productLineItemRequest;
     @Nested
     class whenGetProduct {
         @Test
