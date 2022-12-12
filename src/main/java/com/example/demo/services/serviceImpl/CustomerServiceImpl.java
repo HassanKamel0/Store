@@ -33,16 +33,22 @@ public class CustomerServiceImpl implements CustomerService {
                 .findCustomerByEmail(request.getEmail());
         if(customerOptional.isPresent())
             throw new IllegalStateException("This email is taken");
-        Customer customer= new Customer();
-        customer.setName(request.getName());
-        customer.setEmail(request.getEmail());
-        customer.setPassword(request.getPassword());
+        Customer customer = setCustomerFromRequest(request);
         cartServiceImpl.createCartForCustomer(customer);
         customerRepository.save(customer);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}").buildAndExpand(customer.getId()).toUri();
         return location;
     }
+
+    private static Customer setCustomerFromRequest(CustomerRequest request) {
+        Customer customer= new Customer();
+        customer.setName(request.getName());
+        customer.setEmail(request.getEmail());
+        customer.setPassword(request.getPassword());
+        return customer;
+    }
+
     public void deleteCustomer(Long customerId) {
         boolean exist=customerRepository.existsById(customerId);
         if(!exist)
