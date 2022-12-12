@@ -2,7 +2,6 @@ package com.example.demo.services;
 import com.example.demo.DTO.request.CustomerRequest;
 import com.example.demo.services.serviceImpl.CartServiceImpl;
 import com.example.demo.services.serviceImpl.CustomerServiceImpl;
-import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -20,9 +19,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import java.net.URI;
 import java.util.Objects;
 import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -68,21 +64,13 @@ class CustomerServiceImplTest {
         @Test
         void postCustomer() {
             //given
-            Customer customer = new Customer();
-            CustomerRequest customerRequest = new CustomerRequest();
-            customerRequest.setName("Hassan");
-            customerRequest.setEmail("hassan@gmail.com");
-            customerRequest.setPassword("password");
-            customer.setName(customerRequest.getName());
-            customer.setEmail(customerRequest.getEmail());
-            customer.setPassword(customerRequest.getPassword());
+            CustomerRequest customerRequest = createRequest();
+            Customer customer = setRequestInCustomer(customerRequest);
             MockHttpServletRequest request = new MockHttpServletRequest();
             RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
-            URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-                    .path("/{id}").buildAndExpand(customer.getId()).toUri();
             //when
             when(customerRepository.findCustomerByEmail(any())).thenReturn(Optional.empty());
-            when(underTest.postCustomer(customerRequest)).thenReturn(location);
+            underTest.postCustomer(customerRequest);
             //then
             ArgumentCaptor<Customer> customerArgumentCaptor = ArgumentCaptor.forClass(Customer.class);
             verify(customerRepository).save(customerArgumentCaptor.capture());
@@ -162,5 +150,20 @@ class CustomerServiceImplTest {
                     .hasMessageContaining("Customer with id " + customerId + " doesn't exist");
             verify(customerRepository, never()).save(any());
         }
+    }
+
+    private CustomerRequest createRequest() {
+        CustomerRequest customerRequest = new CustomerRequest();
+        customerRequest.setName("Hassan");
+        customerRequest.setEmail("hassan@gmail.com");
+        customerRequest.setPassword("password");
+        return customerRequest;
+    }
+    private static Customer setRequestInCustomer(CustomerRequest customerRequest) {
+        Customer customer = new Customer();
+        customer.setName(customerRequest.getName());
+        customer.setEmail(customerRequest.getEmail());
+        customer.setPassword(customerRequest.getPassword());
+        return customer;
     }
 }
