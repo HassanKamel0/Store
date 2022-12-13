@@ -13,7 +13,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import java.time.LocalDate;
 import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -126,10 +125,7 @@ class CartServiceImplTest {
     void createCartForCustomer() {
         //given
         Customer customer=new Customer();
-        Cart cart=new Cart();
-        cart.setCustomer(customer);
-        cart.setCreatedDate(LocalDate.now());
-        cart.setTotalPrice(0);
+        Cart cart = getCart(customer);
         //when
         underTest.createCartForCustomer(customer);
         //then
@@ -138,5 +134,13 @@ class CartServiceImplTest {
         Cart capturedCart=cartArgumentCaptor.getValue();
         assertEquals(capturedCart.getTotalPrice(),cart.getTotalPrice());
         assertEquals(capturedCart.getCreatedDate(),cart.getCreatedDate());
+    }
+
+    private static Cart getCart(Customer customer) {
+        Cart cart=new Cart();
+        cart.setCustomer(customer);
+        cart.setCreatedDate(LocalDate.now());
+        cart.setTotalPrice(0);
+        return cart;
     }
 }

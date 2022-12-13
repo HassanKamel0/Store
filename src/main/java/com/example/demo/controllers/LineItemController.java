@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
+
 @RestController
 @RequestMapping("api/v1/lineItem")
 public class LineItemController {
@@ -15,18 +17,13 @@ public class LineItemController {
     private LineItemServiceImpl lineItemServiceImpl;
     @GetMapping("/{lineItemId}")
     public ResponseEntity<LineItemResponse> getLineItem(@PathVariable Long lineItemId){
-        return new ResponseEntity<>(lineItemServiceImpl.getLineItem(lineItemId), HttpStatus.OK);
-    }
+        return new ResponseEntity<>(lineItemServiceImpl.getLineItem(lineItemId), HttpStatus.OK);}
     @PostMapping
-    public void postLineItem(@RequestBody ProductLineItemRequest productLineItemRequest){
-        lineItemServiceImpl.postLineItem(productLineItemRequest);
-    }
+    public ResponseEntity<Object> postLineItem(@RequestBody ProductLineItemRequest productLineItemRequest){
+       URI location= lineItemServiceImpl.postLineItem(productLineItemRequest);
+        return ResponseEntity.created(location).build();}
     @DeleteMapping("/{lineItemId}")
-    public void deleteLineItem(@PathVariable Long lineItemId){
-        lineItemServiceImpl.deleteLineItem(lineItemId);
-    }
+    public void deleteLineItem(@PathVariable Long lineItemId){lineItemServiceImpl.deleteLineItem(lineItemId);}
     @PutMapping("/{lineItemId}")
-    public void updateProduct(@PathVariable Long lineItemId,@RequestBody LineItemRequest lineItemRequest){
-        lineItemServiceImpl.updateProduct(lineItemId,lineItemRequest);
-    }
+    public void updateLineItem(@PathVariable Long lineItemId, @RequestBody LineItemRequest lineItemRequest){lineItemServiceImpl.updateLineItem(lineItemId,lineItemRequest);}
 }

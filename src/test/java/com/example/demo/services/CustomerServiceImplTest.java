@@ -28,8 +28,6 @@ class CustomerServiceImplTest {
     @InjectMocks private CustomerServiceImpl underTest;
     @Mock private CustomerRepository customerRepository;
     @Mock private CartServiceImpl cartServiceImpl;
-    @Mock private CustomerResponse customerResponse;
-    @Mock private CustomerRequest customerRequest;
     @Nested
     class whenGet {
         @Test
@@ -39,7 +37,6 @@ class CustomerServiceImplTest {
             CustomerResponse response = new CustomerResponse();
             response.setName(customer.getName());
             response.setEmail(customer.getEmail());
-
             given(customerRepository.existsById(customer.getId())).willReturn(true);
             when(customerRepository.findById(customer.getId())).thenReturn(Optional.of(customer));
             //when

@@ -33,10 +33,6 @@ class LineItemServiceImplTest {
     @Mock LineItemRepository lineItemRepository;
     @Mock ProductRepository productRepository;
     @Mock CartRepository cartRepository;
-    @Mock LineItemResponse lineItemResponse;
-    @Mock LineItemRequest lineItemRequest;
-    @Mock ProductLineItemRequest productLineItemRequest;
-    @Mock LineItem lineItem;
     @InjectMocks
     LineItemServiceImpl underTest;
     @Nested
@@ -63,16 +59,10 @@ class LineItemServiceImplTest {
     }
     @Test
     void postLineItem() {
-        LineItem lineItem = new LineItem();
-        Cart cart = new Cart();
         Product product = new Product(1000L, "product", 123, "description");
-        ProductLineItemRequest productLineItemRequest = new ProductLineItemRequest();
-        productLineItemRequest.setProductId(product.getId());
-        productLineItemRequest.setQuantity(100);
-        productLineItemRequest.setCartId(1000L);
-        lineItem.setProduct(product);
-        lineItem.setCart(cart);
-        lineItem.setQuantity(productLineItemRequest.getQuantity());
+        ProductLineItemRequest productLineItemRequest = getProductLineItemRequest(product);
+        Cart cart = new Cart();
+        LineItem lineItem = getLineItem(product, productLineItemRequest, cart);
         when(productRepository.findById(productLineItemRequest.getProductId())).thenReturn(Optional.of(product));
         when(cartRepository.findById(productLineItemRequest.getCartId())).thenReturn(Optional.of(cart));
         //when
@@ -112,7 +102,7 @@ class LineItemServiceImplTest {
         when(lineItemRepository.findById(lineItem.getId())).thenReturn(Optional.of(lineItem));
         if (request.getQuantity() > 0)
             lineItem.setQuantity(request.getQuantity());
-        underTest.updateProduct(lineItem.getId(), request);
+        underTest.updateLineItem(lineItem.getId(), request);
         ArgumentCaptor<LineItem> capturedArgumentLineItem = ArgumentCaptor.forClass(LineItem.class);
         verify(lineItemRepository).save(capturedArgumentLineItem.capture());
         LineItem capturedLineItem = capturedArgumentLineItem.getValue();
@@ -157,5 +147,20 @@ class LineItemServiceImplTest {
                     .hasMessageContaining("Product with id " + request.getProductId() + " doesn't exist");
             verify(lineItemRepository,never()).save(any());
         }
+    }
+    private static ProductLineItemRequest getProductLineItemRequest(Product product) {
+        ProductLineItemRequest productLineItemRequest = new ProductLineItemRequest();
+        productLineItemRequest.setProductId(product.getId());
+        productLineItemRequest.setQuantity(100);
+        productLineItemRequest.setCartId(1000L);
+        return productLineItemRequest;
+    }
+
+    private static LineItem getLineItem(Product product, ProductLineItemRequest productLineItemRequest, Cart cart) {
+        LineItem lineItem = new LineItem();
+        lineItem.setProduct(product);
+        lineItem.setCart(cart);
+        lineItem.setQuantity(productLineItemRequest.getQuantity());
+        return lineItem;
     }
 }

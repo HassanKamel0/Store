@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
+
 @RestController
 @RequestMapping(path = "api/v1/cart")
 public class CartController {
@@ -17,9 +19,9 @@ public class CartController {
      return new ResponseEntity<>(cartServiceImpl.getCart(cartId), HttpStatus.OK);
     }
     @PostMapping
-    public void postCart(@RequestBody CartRequest cartRequest){
-      cartServiceImpl.postCart(cartRequest);
-    }
+    public ResponseEntity<Object> postCart(@RequestBody CartRequest cartRequest){
+        URI location=cartServiceImpl.postCart(cartRequest);
+        return ResponseEntity.created(location).build();}
     @DeleteMapping("/{cartId}")
     public void deleteCart(@PathVariable Long cartId){
        cartServiceImpl.deleteCart(cartId);

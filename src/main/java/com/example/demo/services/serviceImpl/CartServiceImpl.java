@@ -7,6 +7,9 @@ import com.example.demo.entity.Customer;
 import com.example.demo.services.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
 import java.time.LocalDate;
 
 @Service
@@ -23,13 +26,16 @@ public class CartServiceImpl implements CartService {
         response.setCreatedDate(cart.getCreatedDate());
         return response;
     }
-    public void postCart(CartRequest request) {
-     Cart cart=new Cart();
-     if(request.getTotalPrice()>0)
-         cart.setTotalPrice(request.getTotalPrice());
-     if(request.getCreatedDate().isBefore(LocalDate.now()) || request.getCreatedDate().isEqual(LocalDate.now()))
-         cart.setCreatedDate(request.getCreatedDate());
-     cartRepository.save(cart);
+    public URI postCart(CartRequest request) {
+        Cart cart = new Cart();
+        if (request.getTotalPrice() > 0)
+            cart.setTotalPrice(request.getTotalPrice());
+        if (request.getCreatedDate().isBefore(LocalDate.now()) || request.getCreatedDate().isEqual(LocalDate.now()))
+            cart.setCreatedDate(request.getCreatedDate());
+        cartRepository.save(cart);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}").buildAndExpand(cart.getId()).toUri();
+        return location;
     }
     public void deleteCart(Long cartId) {
     boolean exist=cartRepository.existsById(cartId);

@@ -11,6 +11,9 @@ import com.example.demo.entity.Product;
 import com.example.demo.services.LineItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
 
 @Service
 public class LineItemServiceImpl implements LineItemService {
@@ -26,12 +29,15 @@ public class LineItemServiceImpl implements LineItemService {
         response.setQuantity(lineItem.getQuantity());
         return response;
     }
-    public void postLineItem(ProductLineItemRequest request) {
+    public URI postLineItem(ProductLineItemRequest request) {
         LineItem lineItem=new LineItem();
         lineItem.setProduct(productRepository.findById(request.getProductId()).get());
         lineItem.setCart(cartRepository.findById(request.getCartId()).get());
         lineItem.setQuantity(request.getQuantity());
         lineItemRepository.save(lineItem);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}").buildAndExpand(lineItem.getId()).toUri();
+        return location;
     }
     public void deleteLineItem(Long lineItemId) {
         boolean exist = lineItemRepository.existsById(lineItemId);
@@ -39,7 +45,7 @@ public class LineItemServiceImpl implements LineItemService {
             throw new IllegalStateException("Line Item with id " + lineItemId + " doesn't exist");
         lineItemRepository.deleteById(lineItemId);
     }
-    public void updateProduct(Long lineItemId, LineItemRequest request) {
+    public void updateLineItem(Long lineItemId, LineItemRequest request) {
         LineItem lineItem = lineItemRepository.findById(lineItemId).orElseThrow(() -> new IllegalStateException(
                         "Line item with id " + lineItemId + " doesn't exist"));
         if (request.getQuantity() > 0)
