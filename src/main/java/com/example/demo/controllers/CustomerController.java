@@ -7,16 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.net.URI;
-
 @RestController
 @RequestMapping(path = "api/v1/customer")
 public class CustomerController {
     @Autowired private CustomerServiceImpl customerServiceImpl;
     @Autowired private CustomerRepository customerRepository;
-    @GetMapping(path = "/{customerId}",consumes = "application/json", produces = "application/json")
-    public ResponseEntity<CustomerResponse> getCustomer(@PathVariable Long customerId){
+    @GetMapping(path = "/{customerId}")
+    public ResponseEntity<CustomerResponse> getCustomer(@PathVariable("customerId") Long customerId){
         return new ResponseEntity<> (customerServiceImpl.getCustomer(customerId), HttpStatus.OK);
     }
     @PostMapping

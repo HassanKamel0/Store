@@ -14,10 +14,8 @@ import java.util.Optional;
 
 @Service
 public class CustomerServiceImpl implements CustomerService {
-    @Autowired
-    private CustomerRepository customerRepository;
-    @Autowired
-    private CartServiceImpl cartServiceImpl;
+    @Autowired private CustomerRepository customerRepository;
+    @Autowired private CartServiceImpl cartServiceImpl;
     public CustomerResponse getCustomer(Long customerId) {
         boolean exist=customerRepository.existsById(customerId);
         if (!exist)
