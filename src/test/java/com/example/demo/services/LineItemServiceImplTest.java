@@ -102,7 +102,7 @@ class LineItemServiceImplTest {
         when(lineItemRepository.findById(lineItem.getId())).thenReturn(Optional.of(lineItem));
         if (request.getQuantity() > 0)
             lineItem.setQuantity(request.getQuantity());
-        underTest.updateProduct(lineItem.getId(), request);
+        underTest.updateLineItem(lineItem.getId(), request);
         ArgumentCaptor<LineItem> capturedArgumentLineItem = ArgumentCaptor.forClass(LineItem.class);
         verify(lineItemRepository).save(capturedArgumentLineItem.capture());
         LineItem capturedLineItem = capturedArgumentLineItem.getValue();
