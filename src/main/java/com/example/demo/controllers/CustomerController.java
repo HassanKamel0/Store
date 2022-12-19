@@ -12,7 +12,6 @@ import java.net.URI;
 @RequestMapping(path = "api/v1/customer")
 public class CustomerController {
     @Autowired private CustomerServiceImpl customerServiceImpl;
-    @Autowired private CustomerRepository customerRepository;
     @GetMapping(path = "/{customerId}")
     public ResponseEntity<CustomerResponse> getCustomer(@PathVariable("customerId") Long customerId){
         return new ResponseEntity<> (customerServiceImpl.getCustomer(customerId), HttpStatus.OK);
@@ -23,11 +22,13 @@ public class CustomerController {
         return ResponseEntity.created(location).build();
     }
     @DeleteMapping(path = "{customerId}")
-    public void deleteCustomer(@PathVariable("customerId") Long customerId){
+    public ResponseEntity deleteCustomer(@PathVariable("customerId") Long customerId){
         customerServiceImpl.deleteCustomer(customerId);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
     @PutMapping(path = "{customerId}")
-    public void updateCustomer(@PathVariable Long customerId,@RequestBody CustomerRequest request){
+    public ResponseEntity updateCustomer(@PathVariable Long customerId,@RequestBody CustomerRequest request){
         customerServiceImpl.updateCustomer(customerId,request);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 }

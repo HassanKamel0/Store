@@ -22,12 +22,15 @@ public class ProductController {
      return ResponseEntity.created(location).build();
     }
     @PostMapping("/{lineItemId}")
-    public ResponseEntity<Object> postProductInLineItem(@RequestBody ProductLineItemRequest LineItemRequest){
+    public ResponseEntity postProductInLineItem(@RequestBody ProductLineItemRequest LineItemRequest){
         URI location= productServiceImpl.postProductInLineItem(LineItemRequest);
         return ResponseEntity.created(location).build();
     }
     @DeleteMapping("/{productId}")
-    public void deleteProduct(@PathVariable Long productId){productServiceImpl.deleteProduct(productId);}
+    public ResponseEntity deleteProduct(@PathVariable Long productId){
+        productServiceImpl.deleteProduct(productId);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 
     @PutMapping("/{productId}")
     public void updateProduct(@PathVariable Long productId,@RequestBody ProductRequest request){
