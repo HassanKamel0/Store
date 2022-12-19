@@ -4,10 +4,12 @@ import com.example.demo.DTO.request.ProductLineItemRequest;
 import com.example.demo.DTO.request.ProductRequest;
 import com.example.demo.DTO.response.ProductResponse;
 
+import java.net.URI;
+
 public interface ProductService {
     ProductResponse getProduct(Long productId);
-    void postProduct(ProductRequest productRequest);
+    URI postProduct(ProductRequest productRequest);
     void deleteProduct(Long productId);
     void updateProduct(Long productId, ProductRequest request);
-    void postProductInLineItem(ProductLineItemRequest lineItemRequest);
+    URI postProductInLineItem(ProductLineItemRequest lineItemRequest);
 }

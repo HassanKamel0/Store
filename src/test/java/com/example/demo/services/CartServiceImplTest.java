@@ -15,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDate;
 import java.util.Optional;
+import java.net.URI;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -64,7 +65,7 @@ class CartServiceImplTest {
         if(request.getCreatedDate().isBefore(LocalDate.now()) || request.getCreatedDate().isEqual(LocalDate.now()))
             cart.setCreatedDate(request.getCreatedDate());
         //when
-        underTest.postCart(request);
+        var link= underTest.postCart(request);
         //then
         ArgumentCaptor<Cart> customerArgumentCaptor = ArgumentCaptor.forClass(Cart.class);
         verify(cartRepository).save(customerArgumentCaptor.capture());

@@ -23,7 +23,13 @@ public class LineItemController {
        URI location= lineItemServiceImpl.postLineItem(productLineItemRequest);
         return ResponseEntity.created(location).build();}
     @DeleteMapping("/{lineItemId}")
-    public void deleteLineItem(@PathVariable Long lineItemId){lineItemServiceImpl.deleteLineItem(lineItemId);}
+    public ResponseEntity deleteLineItem(@PathVariable Long lineItemId){
+        lineItemServiceImpl.deleteLineItem(lineItemId);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
     @PutMapping("/{lineItemId}")
-    public void updateLineItem(@PathVariable Long lineItemId, @RequestBody LineItemRequest lineItemRequest){lineItemServiceImpl.updateLineItem(lineItemId,lineItemRequest);}
+    public ResponseEntity updateLineItem(@PathVariable Long lineItemId, @RequestBody LineItemRequest lineItemRequest){
+        lineItemServiceImpl.updateLineItem(lineItemId,lineItemRequest);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 }

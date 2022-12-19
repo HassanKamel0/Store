@@ -23,11 +23,13 @@ public class CartController {
         URI location=cartServiceImpl.postCart(cartRequest);
         return ResponseEntity.created(location).build();}
     @DeleteMapping("/{cartId}")
-    public void deleteCart(@PathVariable Long cartId){
-       cartServiceImpl.deleteCart(cartId);
+    public ResponseEntity deleteCart(@PathVariable Long cartId){
+        cartServiceImpl.deleteCart(cartId);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
     @PutMapping("/{cartId}")
-    public void updateCart(@PathVariable Long cartId,@RequestBody CartRequest request){
+    public ResponseEntity updateCart(@PathVariable Long cartId,@RequestBody CartRequest request){
       cartServiceImpl.updateCart(cartId,request);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 }

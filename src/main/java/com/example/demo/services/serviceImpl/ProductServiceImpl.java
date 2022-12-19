@@ -5,9 +5,11 @@ import com.example.demo.DTO.response.ProductResponse;
 import com.example.demo.repository.ProductRepository;
 import com.example.demo.entity.Product;
 import com.example.demo.services.ProductService;
-import com.example.demo.services.serviceImpl.LineItemServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
 import java.util.Optional;
 
 @Service
@@ -24,7 +26,7 @@ public class ProductServiceImpl implements ProductService {
         response.setPrice(product.getPrice());
         return response;
     }
-    public void postProduct(ProductRequest productRequest) {
+    public URI postProduct(ProductRequest productRequest) {
         Optional<Product> productOptional=productRepository
                 .findProductByName(productRequest.getName());
         if(productOptional.isPresent())
@@ -33,6 +35,9 @@ public class ProductServiceImpl implements ProductService {
         product.setName(productRequest.getName());
         product.setPrice(productRequest.getPrice());
         productRepository.save(product);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}").buildAndExpand(product.getId()).toUri();
+        return location;
     }
     public void deleteProduct(Long productId) {
         boolean exist=productRepository.existsById(productId);
@@ -49,7 +54,10 @@ public class ProductServiceImpl implements ProductService {
             product.setPrice(request.getPrice());
         productRepository.save(product);
     }
-    public void postProductInLineItem(ProductLineItemRequest lineItemRequest) {
+    public URI postProductInLineItem(ProductLineItemRequest lineItemRequest) {
         lineItemServiceImpl.putProductInLineItem(lineItemRequest);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}").buildAndExpand(lineItemRequest.getProductId()).toUri();
+        return location;
     }
 }
